@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-
-
-
-
 const Course = require('../models/Course');
+const Category = require('../models/Category');
 
 exports.createCourse = async (req, res) => {
   try {
@@ -26,10 +23,19 @@ exports.createCourse = async (req, res) => {
 
 exports.getAllCourses = async (req, res) => {
   try {
-    /// eğre bi hata yok ise burayı
-    const courses = await Course.find(); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
+
+    const categorySlug = req.query.category;
+    const category = await Category.findOne({slug:categorySlug})
+    let filter = {}
+    if(categorySlug){
+      filter = {category:category._id}
+    }
+    console.log(filter)
+    const categories = await Category.find()
+    const courses = await Course.find(filter).collation({locale:'en',strength: 2}).sort({title:1}) // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
     res.status(200).render('courses', {
       courses: courses,
+      categories,
       page_name: 'courses',
     });
   } catch (error) {
@@ -42,7 +48,6 @@ exports.getAllCourses = async (req, res) => {
 };
 
  exports.getCourse = async (req, res) => {
-   console.log(req.params.slug)
     try {
       /// eğre bi hata yok ise burayı
       const course = await Course.findOne({slug:req.params.slug}); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
@@ -63,5 +68,5 @@ exports.getAllCourses = async (req, res) => {
    
 
 router.get('/123', (req,res) => {
-    req.params.id
+
 });

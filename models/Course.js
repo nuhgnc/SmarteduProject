@@ -8,7 +8,8 @@ const CourseSchema = new schema({
     description: { type: String, required: true, trim: true}, //string olacak, boş geçilmeyecek, başta ve sonda boşluk varsa silecek
     image: {type: String, default: 'https://smartlearnsolutions.com.au/images/upload/Online-courses-1000x600.jpg'},
     createdAt: { type: Date, default: Date.now},  // Oluşturulma tarıhini yazacak
-    slug: { type: String, unique: true}
+    slug: { type: String, unique: true},
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category'}
 })
 
 CourseSchema.pre('validate', function(next){
