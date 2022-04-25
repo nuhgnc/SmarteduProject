@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('');
+
+
+
 
 const Course = require('../models/Course');
 
@@ -38,3 +40,28 @@ exports.getAllCourses = async (req, res) => {
     });
   }
 };
+
+ exports.getCourse = async (req, res) => {
+   console.log(req.params.slug)
+    try {
+      /// eğre bi hata yok ise burayı
+      const course = await Course.findOne({slug:req.params.slug}); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
+      res.status(200).render('course', {
+        course,
+        datenow: JSON.stringify( course.createdAt ).slice(1,11),
+        page_name: 'course',
+      });
+    } catch (error) {
+      // hata var ise burayı cevap ile gönderir
+      res.status('400').json({
+        status: 'fail',
+        error,
+        
+      });
+    }
+  };
+   
+
+router.get('/123', (req,res) => {
+    req.params.id
+});
