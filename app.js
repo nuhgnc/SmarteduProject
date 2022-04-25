@@ -17,6 +17,10 @@ app.set('view engine', 'ejs');
 
 //MİDDLEWARES
 app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json())
+
+//ROUTES
 app.use('/', pageRoute);
 app.use('/courses', courseRoute)
 
