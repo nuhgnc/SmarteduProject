@@ -1,5 +1,7 @@
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
+
+
+const User = require('../models/User');
 
 exports.createUser = async (req, res) => {
   try {
@@ -15,7 +17,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.userLogin = async (req, res) => {
+exports.userLogin = (req, res) => {
   try {
     const { email, password } = req.body;
     User.findOne({ email }, (err, user) => {
@@ -23,16 +25,22 @@ exports.userLogin = async (req, res) => {
         bcrypt.compare(password, user.password, (err, same) => {
           if (same) {
             //user session
-            res.status(200).send('You are loged in');
+            req.session.userID = user._id
+            res.status(200).redirect('/')
           }
-          return err;
         });
     });
-  } catch (error) {
+  } catch (err) {
     // hata var ise burayı cevap ile gönderir
     res.status('400').json({
       status: 'fail',
-      error,
+      err,
     });
   }
+};
+
+exports.userLogout = async (req, res) => {
+  req.session.destroy( () =>{
+    res.redirect('/')
+  })
 };

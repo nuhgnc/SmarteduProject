@@ -1,11 +1,13 @@
 const express = require('express'),
   ejs = require('ejs'),
-  mongoose = require('mongoose');
+  mongoose = require('mongoose'),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo');
 
 const pageRoute = require('./routes/pageRoutes'),
   courseRoute = require('./routes/courseRoute'),
   categoryRoute = require('./routes/categoryRoute'),
-  userRoute = require('./routes/userRoute')
+  userRoute = require('./routes/userRoute');
 
 const app = express();
 
@@ -22,13 +24,25 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(
+  session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: 'mongodb://localhost/smartedu-DB' }),
+  })
+);
 
 //ROUTES
+global.isUserIn = null;
+app.use('*', (req, res, next) => {
+  global.isUserIn = req.session.userID;
+  next();
+});
 app.use('/', pageRoute);
 app.use('/courses', courseRoute);
-app.use('/categories', categoryRoute)
-app.use('/users', userRoute)
-
+app.use('/categories', categoryRoute);
+app.use('/users', userRoute);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
