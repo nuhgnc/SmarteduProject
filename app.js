@@ -9,6 +9,7 @@ const pageRoute = require('./routes/pageRoutes'),
   categoryRoute = require('./routes/categoryRoute'),
   userRoute = require('./routes/userRoute');
 
+
 const app = express();
 
 //DATABASE CONNECTİON
@@ -39,6 +40,7 @@ app.use('*', (req, res, next) => {
   global.isUserIn = req.session.userID;
   next();
 });
+
 app.use('/', pageRoute);
 app.use('/courses', courseRoute);
 app.use('/categories', categoryRoute);
