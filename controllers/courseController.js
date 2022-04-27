@@ -8,10 +8,7 @@ exports.createCourse = async (req, res) => {
   try {
     /// eğre bi hata yok ise burayı
     const course = await Course.create(req.body); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
-    res.status(201).json({
-      status: 'success',
-      course,
-    });
+    res.status(201).redirect('/courses');
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
     res.status('400').json({
@@ -30,7 +27,6 @@ exports.getAllCourses = async (req, res) => {
     if(categorySlug){
       filter = {category:category._id}
     }
-    console.log(filter)
     const categories = await Category.find()
     const courses = await Course.find(filter).collation({locale:'en',strength: 2}).sort({title:1}) // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
     res.status(200).render('courses', {

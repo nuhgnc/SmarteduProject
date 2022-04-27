@@ -35,9 +35,9 @@ app.use(
 );
 
 //ROUTES
-global.isUserIn = null;
+global.currentUser = null;
 app.use('*', (req, res, next) => {
-  global.isUserIn = req.session.userID;
+  global.currentUser = req.session.userID;
   next();
 });
 
