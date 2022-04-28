@@ -33,12 +33,17 @@
 								<h2><a href="/courses/<%= course.slug %> " title=""><%= course.title %> </a></h2>
 							</div>
 							<div class="course-desc">
+								<% if (course.description.length > 100) { %>
+									<p><%= course.description.substring(0,100) + " ..." %></p>
+									<label>Read More</label>
+								<% } else if(course.description.length < 100) { %>
 								<p><%= course.description %></p>
+								<% } %> 
 							</div>
 						</div>
 						<div class="course-meta-bot">
 							<ul>
-								<li><i class="fa fa-user" aria-hidden="true"></i>Teacher Name</li>
+								<li><i class="fa fa-user" aria-hidden="true"></i> <%= course.user.name %>  </li>
 							</ul>
 						</div>
 					</div>

@@ -3829,7 +3829,10 @@ a.link-style3 {
 .course-item{
 	background: #ffffff;
 }
-.course-item{}
+.course-item{
+    width: 398px;
+    height: 451px;
+}
 .course-title > h2 {
     margin: 15px 0;
     padding: 0px;
@@ -3845,6 +3848,8 @@ a.link-style3 {
 	color: #eea412;
 }
 .course-br{
+    width: 398px;
+    height: 180px;
 	border: 1px solid #4babb1;
 	padding: 15px;
 }

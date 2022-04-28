@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-
+const Course = require('../models/Course')
 const User = require('../models/User');
 const Category = require('../models/Category')
 
@@ -24,11 +24,11 @@ exports.userLogin = (req, res) => {
     User.findOne({ email }, (err, user) => {
       if (user)
         bcrypt.compare(password, user.password, (err, same) => {
-          if (same) {
+         
             //user session
             req.session.userID = user._id
             res.status(200).redirect('/')
-          }
+          
         });
     });
   } catch (err) {
@@ -49,10 +49,12 @@ exports.userLogout = async (req, res) => {
 
 exports.getDashboardPage = async (req, res) => {
   const categories = await Category.find({});
-  const user = await User.findOne({_id:req.session.userID})
+  const user = await User.findOne({_id:req.session.userID}).populate('courses')
+  const courses = await Course.find({user: req.session.userID})
   res.status(200).render('dashboard', {
     page_name: 'dashboard',
     user,
-    categories
+    categories,
+    courses
   });
 };
