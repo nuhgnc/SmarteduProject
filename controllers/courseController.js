@@ -27,16 +27,36 @@ exports.createCourse = async (req, res) => {
 exports.getAllCourses = async (req, res) => {
   try {
     const categorySlug = req.query.category;
+    const query = req.query.search;
+    
     const category = await Category.findOne({ slug: categorySlug });
     let filter = {};
+
+    if(query){
+      filter = {name: query}
+    }
+    
+    if(!query && !categorySlug) {
+      filter.name = "",
+      filter.category = null
+    }
+
     if (categorySlug) {
       filter = { category: category._id };
     }
+    
+    const courses = await Course.find({
+      $or:[
+        {title: { $regex: ".*"+ filter.name + ".*", $options: "i"} },
+        {category: filter.category}
+      ]
+    })
+    .populate('user')
+    .collation({ locale: 'en', strength: 2 })
+    .sort({ title: 1 }); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
+    console.log(filter.name)
+    
     const categories = await Category.find();
-    const courses = await Course.find(filter)
-      .populate('user')
-      .collation({ locale: 'en', strength: 2 })
-      .sort({ title: 1 }); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
     res.status(200).render('courses', {
       courses: courses,
       categories,
@@ -54,13 +74,15 @@ exports.getAllCourses = async (req, res) => {
 exports.getCourse = async (req, res) => {
   try {
     /// eğre bi hata yok ise burayı
+    const categories = await Category.find();
     const course = await Course.findOne({ slug: req.params.slug }).populate('user');
     const user = await User.findById(req.session.userID)
     res.status(200).render('course', {
       course,
       datenow: JSON.stringify(course.createdAt).slice(1, 11),
       page_name: 'course',
-      user
+      user,
+      categories
     });
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
