@@ -14,7 +14,7 @@ exports.createCourse = async (req, res) => {
       category: req.body.category,
       user: req.session.userID,
     }); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
-    req.flash('success', `Course created: ${course.title}`);
+    req.flash('success', `${course.title}`);
     res.status(201).redirect('/courses');
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
@@ -126,5 +126,36 @@ exports.relaseCourse = async (req, res) => {
     });
   }
 };
+
+exports.deleteCourse = async (req, res) => {
+  try {
+    const course = await Course.findOneAndRemove({slug: req.params.slug})
+    req.flash('success', `${course.title}`);
+    res.redirect('/users/dashboard')
+  } catch (error) {
+    // hata var ise burayı cevap ile gönderir
+    req.flash('error', `Kurs kaldırma işleminde hata oluştu`);
+    res.status(200).redirect('/users/dashboard');
+  }
+};
+
+exports.updateCourse = async (req, res) => {
+  try {
+    const course = await Course.findOneAndUpdate({slug: req.params.slug},{
+      title: req.body.title,
+      description: req.body.description,
+      category: req.body.category
+    })
+    
+    //req.flash('updateSuccess', `${course.title} -->>    ${req.body.title} `);
+    req.flash('updateSuccess', course.title +  "   --->   " + req.body.title );
+    res.redirect('/users/dashboard')
+  } catch (error) {
+    // hata var ise burayı cevap ile gönderir
+    req.flash('error', `Kurs güncelleme işleminde hata oluştu ${error}`);
+    res.status(200).redirect('/users/dashboard');
+  }
+};
+
 
 router.get('/123', (req, res) => { });

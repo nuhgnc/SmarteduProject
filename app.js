@@ -3,7 +3,8 @@ const express = require('express'),
   mongoose = require('mongoose'),
   session = require('express-session'),
   MongoStore = require('connect-mongo'),
-  flash = require('connect-flash');
+  flash = require('connect-flash'),
+  methodOverride = require('method-override')
 
 const pageRoute = require('./routes/pageRoutes'),
   courseRoute = require('./routes/courseRoute'),
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
   res.locals.flashMessages = req.flash();
   next();
 });
+app.use(methodOverride('_method',{methods: ["POST","GET"]}))
 
 //ROUTES
 global.currentUser = null;

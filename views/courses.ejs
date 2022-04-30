@@ -14,16 +14,23 @@
 			<h1>Courses<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
 		</div>
 	</div>
-	<% if (flashMessages) { %>
-		<% if (flashMessages.success) { %>
-			<div class="alert alert-danger"><%= flashMessages.error %> </div>
-		<% } %>
-	<% } %>
-	<%= flashMessages.success %> 
+	
+	
     <div id="overviews" class="section wb">
         <div class="container">
             <div class="row"> 
                 <div class="col-lg-9 blog-post-single">
+					<% if (flashMessages) { %>
+						
+							<% if (flashMessages.success) { %>
+								<div class="alert alert-success"><h2> Kurs oluşturldu : </h2><%= flashMessages.success %> </div>
+							<% } %>
+							<% if (flashMessages.error) { %>
+								<div class="alert alert-danger">asdas<%= flashMessages.error %> </div>
+							<% } %>
+						
+						<% } %>
+						
 				            <div class="row"> 
 
 			<% courses.forEach(course => { %>
