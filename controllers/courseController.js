@@ -14,6 +14,7 @@ exports.createCourse = async (req, res) => {
       category: req.body.category,
       user: req.session.userID,
     }); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
+    req.flash('success', `Course created: ${course.title}`);
     res.status(201).redirect('/courses');
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
@@ -95,18 +96,17 @@ exports.getCourse = async (req, res) => {
 
 exports.enrollCourse = async (req, res) => {
   try {
+    
     console.log(req.body.course_id);
     const user = await User.findById(req.session.userID);
     await user.courses.push({ _id: req.body.course_id });
     await user.save();
-
+    req.flash("success", `course enrolled`)
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
-    res.status('400').json({
-      status: 'fail',
-      error,
-    });
+    req.flash("error", `course did not enrolled`)
+    res.status(200).redirect('/users/dashboard');
   }
 };
 
@@ -116,7 +116,7 @@ exports.relaseCourse = async (req, res) => {
     const user = await User.findById(req.session.userID);
     await user.courses.pull({ _id: req.body.course_id });
     await user.save();
-
+    
     res.status(200).redirect('/users/dashboard');
   } catch (error) {
     // hata var ise burayı cevap ile gönderir

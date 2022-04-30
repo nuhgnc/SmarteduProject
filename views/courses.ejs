@@ -14,7 +14,12 @@
 			<h1>Courses<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
 		</div>
 	</div>
-	
+	<% if (flashMessages) { %>
+		<% if (flashMessages.success) { %>
+			<div class="alert alert-danger"><%= flashMessages.error %> </div>
+		<% } %>
+	<% } %>
+	<%= flashMessages.success %> 
     <div id="overviews" class="section wb">
         <div class="container">
             <div class="row"> 

@@ -25,6 +25,14 @@
                 <div class="col-xl-12 col-md-12 col-sm-12">
                     <div class="contact_form">
                         <div id="message"></div>
+                        <% if (flashMessages) { %>
+                            <% if (flashMessages.error) { %>
+                                <div class="alert alert-danger offset-1 col-lg-10 col-md-10 col-sm-10"> <%= flashMessages.error %> </div>
+                            <% } %>
+                            <% if (flashMessages.passwordErr) { %>
+                                <div class="alert alert-danger offset-1 col-lg-10 col-md-10 col-sm-10"> <%= flashMessages.passwordErr %> </div>
+                            <% } %>
+                        <% } %>
                         <form class="" name="contactform" method="post" action="users/login">
                             <div class="row row-fluid">
                                 <div class="offset-1 col-lg-10 col-md-10 col-sm-10">
