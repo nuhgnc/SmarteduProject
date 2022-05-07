@@ -21,7 +21,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-
 exports.userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -34,7 +33,7 @@ exports.userLogin = async (req, res) => {
           req.session.userID = user._id;
           res.status(200).redirect('/users/dashboard');
         } else {
-          req.flash('error', 'Your password is not correct!');
+          req.flash('passwordErr', 'Parolanız hatalı!');
           res.status(400).redirect('/login');
         }
       });
@@ -59,14 +58,67 @@ exports.userLogout = async (req, res) => {
 
 exports.getDashboardPage = async (req, res) => {
   const categories = await Category.find({});
+  const allUsers = await User.find();
   const user = await User.findOne({ _id: req.session.userID }).populate(
     'courses'
   );
-  const courses = await Course.find({ user: req.session.userID });
+  const courses = await Course.find({ user: req.session.userID }).populate(
+    'category'
+  );
   res.status(200).render('dashboard', {
     page_name: 'dashboard',
     user,
     categories,
     courses,
+    allUsers,
   });
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    /// eğre bi hata yok ise burayı
+    const user = await User.findById(req.params.userID);
+    req.flash(
+      'success',
+      `<div class="row mt-5">
+    <table class="table table-sm  ">
+    <div class="alert alert-primary float-center"><h3> Silme işleminde başarılı. </h3></div>
+    <tbody>
+    <tr>
+            <td class="bg-warning">${user._id}</td>
+            <td class="bg-warning">${user.name} </td>
+            <td class="bg-warning"> ${user.email} </td>
+            <td class="bg-warning"> ${user.role}</td>
+          </tr>
+        
+      </tbody>
+      </table>
+  </div><!-- end row -->`
+    );
+    await user.delete();
+
+    res.status(201).redirect('/users/dashboard');
+  } catch (error) {
+    // hata var ise burayı cevap ile gönderir
+    req.flash('error', error);
+    console.log(err);
+    res.status(400).redirect('/users/dashboard');
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+     const user  = await User.findOne({_id:req.params.userID})
+      user.name  = req.body.name,
+      user.email = req.body.email,
+      user.image = req.body.image,
+      user.role  = req.body.role
+      user.save()
+  console.log(`${user.email} ----- ${req.body.email} ------ ${Boolean(user.email == req.body.email)} ------ ${req.params.userID} `)
+
+    res.redirect('/users/dashboard');
+  } catch (error) {
+    // hata var ise burayı cevap ile gönderir
+    console.log(error);
+  }
 };

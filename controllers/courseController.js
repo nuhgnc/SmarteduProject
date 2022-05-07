@@ -7,13 +7,20 @@ const User = require('../models/User');
 
 exports.createCourse = async (req, res) => {
   try {
+
+    const category = await Category.findById(req.body.category)
+    
     /// eğre bi hata yok ise burayı
     const course = await Course.create({
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
       user: req.session.userID,
+      image:req.body.image
     }); // req.body ile gönderilen bilgileri Course modeli ile eşleştirip oluşturur. daha sonra course değişeknine atar
+    await category.totalCourse.push({_id:course._id})
+    await category.save();
+    
     req.flash('success', `${course.title}`);
     res.status(201).redirect('/courses');
   } catch (error) {
@@ -96,8 +103,6 @@ exports.getCourse = async (req, res) => {
 
 exports.enrollCourse = async (req, res) => {
   try {
-    
-    console.log(req.body.course_id);
     const user = await User.findById(req.session.userID);
     await user.courses.push({ _id: req.body.course_id });
     await user.save();
@@ -112,7 +117,6 @@ exports.enrollCourse = async (req, res) => {
 
 exports.relaseCourse = async (req, res) => {
   try {
-    console.log(req.body.course_id);
     const user = await User.findById(req.session.userID);
     await user.courses.pull({ _id: req.body.course_id });
     await user.save();
@@ -129,12 +133,19 @@ exports.relaseCourse = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
   try {
-    const course = await Course.findOneAndRemove({slug: req.params.slug})
+    const course = await Course.findOne({slug: req.params.slug})
+    const category = await Category.findOne({_id: course.category._id})
+
+    await category.totalCourse.pull({ _id: course._id });
+
+    await category.save();
+    await course.remove();
+
     req.flash('success', `${course.title}`);
     res.redirect('/users/dashboard')
   } catch (error) {
     // hata var ise burayı cevap ile gönderir
-    req.flash('error', `Kurs kaldırma işleminde hata oluştu`);
+    req.flash('error', `Kurs kaldırma işleminde hata oluştu ${error}`);
     res.status(200).redirect('/users/dashboard');
   }
 };
@@ -146,8 +157,19 @@ exports.updateCourse = async (req, res) => {
       description: req.body.description,
       category: req.body.category
     })
+    const oldCategory = await Category.findOne({_id: course.category._id})
+    const newCategory = await Category.findOne({_id: req.body.category})
+
+    await oldCategory.totalCourse.pull({ _id: course._id });
+    await newCategory.totalCourse.push({ _id: course._id })
+    await oldCategory.save();
+    await newCategory.save();
+
+    console.log("kurs: " + course._id)
+    console.log("old category " + course.category._id)
+    console.log("new category " + req.body.category)
+
     
-    //req.flash('updateSuccess', `${course.title} -->>    ${req.body.title} `);
     req.flash('updateSuccess', course.title +  "   --->   " + req.body.title );
     res.redirect('/users/dashboard')
   } catch (error) {

@@ -28,12 +28,24 @@
 						
 						<div class="post-content">
 							<div class="post-date">
-								<% if (!(user.courses.includes(course._id))) { %>
+								<% if (!(user.courses.includes(course._id)) && user.role !== 'teacher' && user.role !== 'admin') { %>
 									<form action="/courses/enroll" method="post">
 										<input type="hidden" name="course_id" value="<%= course._id %>">
 										<button class="btn btn-lg btn-warning text-white"><span>ENROLL</span></button>
 									</form>
 								<% } %>
+								<% if ((user.courses.includes(course._id))) { %>
+									<form action="/courses/enroll" method="post">
+										<input type="hidden" name="course_id" value="<%= course._id %>">
+										<a href="/courses/<%= course.slug %>?_method=DELETE " onclick="return confirm('Kursu silmek istediğine emin misin ? \n <%= course.title %> ')" style="float: right;" class="btn btn-danger text-white rounded-0"> <span>DELETE</span> </a>
+									</form>
+								<% } %>
+								<% if (user.role == 'teacher') { %>
+									<form action="/courses/enroll" method="post">
+										<a href="/users/dashboard"  style="float: right;" class="btn btn-primary text-white rounded-2"> <span>Yönet</span> </a>
+									</form>
+								<% } %>
+
 								
 							</div>
 							<div class="meta-info-blog">
@@ -44,21 +56,29 @@
 							</div>
 							<div class="blog-desc">
 								<blockquote class="default">
-									<%= course.description %> 
+									<%- course.description %> 
 								</blockquote>
 							</div>							
 						</div>
 					</div>
 					<div class="blog-author">
 						<div class="author-bio">
-							<h3 class="author_name"><a href="#"> <%= course.user.name %> </a></h3>
+							<% if (course.user) { %>
+								<h3 class="author_name"><a href="#"> <%= course.user.name %> </a></h3>
+							<% } %>
+							<% if (!course.user) { %>
+								<h3 class="author_name"><a href="#"> Teacher name ! </a></h3>
+							<% } %>
+							
 							<h5>CEO at <a href="#">SmartEDU</a></h5>
 							<p class="author_det">
 								Lorem ipsum dolor sit amet, consectetur adip, sed do eiusmod tempor incididunt  ut aut reiciendise voluptat maiores alias consequaturs aut perferendis doloribus omnis saperet docendi nec, eos ea alii molestiae aliquand.
 							</p>
 						</div>
 						<div class="author-desc">
-							<img src="/images/author.jpg" alt="about author">
+							<% if (course.user) { %>
+								<img src="<%= course.user.image %> " alt="about author">
+							<% } %>
 							<ul class="author-social">
 								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
 								<li><a href="#"><i class="fa fa-twitter"></i></a></li>

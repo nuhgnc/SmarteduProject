@@ -11,7 +11,7 @@
 	
 	<div class="all-title-box">
 		<div class="container text-center">
-			<h1>Courses<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
+			<h1>Kurslar<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
 		</div>
 	</div>
 	
@@ -46,16 +46,24 @@
 							</div>
 							<div class="course-desc">
 								<% if (course.description.length > 100) { %>
-									<p><%= course.description.substring(0,100) + " ..." %></p>
+									<p><% course.description.substring(0,100) + " ..." %></p>
 									<label>Read More</label>
 								<% } else if(course.description.length < 100) { %>
-								<p><%= course.description %></p>
+								<p><%- course.description %></p>
+								<label>Read More</label>
 								<% } %> 
 							</div>
 						</div>
+						
 						<div class="course-meta-bot">
 							<ul>
-								<li><i class="fa fa-user" aria-hidden="true"></i> <%= course.user.name %>  </li>
+								<% if (course.user) { %>
+										<li><i class="fa fa-user" aria-hidden="true"></i> <%= course.user.name %>  </li>
+								<% } %>
+								<% if (!course.user) { %>
+									<li><i class="fa fa-user" aria-hidden="true"></i> Teacher Name  </li>
+								<% } %>
+								 
 							</ul>
 						</div>
 					</div>
@@ -72,7 +80,7 @@
 						<div class="site-search-area">
 							<form method="get" id="site-searchform" action="#">
 								<div>
-									<input class="input-text form-control" name="search" id="search-k" placeholder="Search keywords..." type="text">
+									<input class="input-text form-control" name="search" id="search-k" placeholder="Anahtar Kelime Ara..." type="text">
 									<button id="searchsubmit" value="Search" type="submit"> </button>
 								</div>
 							</form>

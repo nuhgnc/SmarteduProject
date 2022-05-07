@@ -6,6 +6,7 @@ const schema = mongoose.Schema;
 const CategorySchema = new schema({
   title: { type: String, unique: true, required: true },
   slug: { type: String, unique: true },
+  totalCourse: [{ type: schema.Types.ObjectId, ref: 'course'}]
 });
 
 CategorySchema.pre('validate', function (next) {
