@@ -1,4 +1,4 @@
-[Live Demo]https://smarteducationapp.herokuapp.com/)
+[Live Demo](https://smarteducationapp.herokuapp.com/)
 admin: admin@gmail.com : admin
 
 # SMART EDU
