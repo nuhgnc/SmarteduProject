@@ -1,4 +1,7 @@
-﻿# SMART EDU
+[Live Demo]https://smarteducationapp.herokuapp.com/)
+admin: admin@gmail.com : admin
+
+# SMART EDU
 
 ## KURULUM VE BAŞLATMA
 Github sayfasından projeyi indirin ve istediğiniz bir klasöre çıakrtın. Daha sonra çıkarttığınız dizini kod editörü ile açın. Varsa editörün terminal ekranınına yoksa işletim sistemin kout ekranına aşağıdaki kodu yazın
