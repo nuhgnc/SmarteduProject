@@ -1,5 +1,6 @@
-[Live Demo](https://smarteducationapp.herokuapp.com/)
-admin: admin@gmail.com : admin
+[Live Demo](https://smarteducationapp.herokuapp.com/)  
+
+admin User - admin@gmail.com : admin
 
 # SMART EDU
 
