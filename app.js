@@ -16,7 +16,7 @@ const app = express();
 //DATABASE CONNECTİON
 mongoose.connect('mongodb+srv://admin:Ac123321.@smartedu.5z8mx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
   .then(res => console.log('DB CONNECTED '))
-  .catch(err => console.log('DB CONNECTİON ERROR  ' + err));
+  .catch(err => res.send('DB CONNECTİON ERROR  ' + err));
 
 //TEMPLATE ENGİNE
 app.set('view engine', 'ejs');
