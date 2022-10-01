@@ -30,7 +30,7 @@ app.use(
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: 'mongodb+srv://admin:admin123@smartedu.5z8mx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' }),
+    store: MongoStore.create({ mongoUrl: 'mongodb+srv://admin:Ac123321.@smartedu.5z8mx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority' }),
   })
 );
 app.use(flash());
